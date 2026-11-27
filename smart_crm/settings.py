@@ -28,7 +28,8 @@ SECRET_KEY = "django-insecure-hy1aqx+e54#c+lvb+=i*s-ly0q*740j0wbr_icub#gmg4l^+v!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -83,6 +84,9 @@ WSGI_APPLICATION = "smart_crm.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
+import dj_database_url
+
+# ১. এটি আপনার আগের লোকাল পিসির ডাটাবেজ (যেমন ছিল তেমনই থাকবে)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -93,6 +97,14 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# ২. লাইভ সার্ভারে গেলে অটোমেটিক Neon ডাটাবেজ চালু হবে (আপনার কিছু মনে রাখতে হবে না)
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600,
+        ssl_require=True
+    )
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
